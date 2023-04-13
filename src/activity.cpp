@@ -76,6 +76,7 @@ void runActivities(void *params)
             continue;
         }
         lastActivityTime = millis();
+        activityCurrent = activityNext;
         activityCount++;
 
         Serial.printf("[ACTIVITY] starting activity: %d\n", activityNext);
@@ -99,12 +100,8 @@ void runActivities(void *params)
             // delaySleep(10);
             break;
         case GuestWifi:
-            // only change activities if necessary
-            if (activityCurrent != GuestWifi)
-            {
-                setSleepDuration(TIME_TO_QUICK_SLEEP_SEC);
-                displayWiFiQR();
-            }
+            setSleepDuration(TIME_TO_QUICK_SLEEP_SEC);
+            displayWiFiQR();
             break;
         case Info:
             setSleepDuration(TIME_TO_QUICK_SLEEP_SEC);
@@ -122,14 +119,13 @@ void runActivities(void *params)
                 Serial.printf("[ACTIVITY][ERROR] HomeAssistant Activity reset while waiting, aborting...\n");
                 continue;
             }
-            // get & render hass image
+            // get & render image
             delaySleep(20);
             remotePNG(getMessage());
             break;
         default:
             Serial.printf("[ACTIVITY][ERROR] runActivities() unhandled Activity: %d\n", activityNext);
         }
-        activityCurrent = activityNext;
         // check and display a low battery warning if needed
         displayBatteryWarning();
 

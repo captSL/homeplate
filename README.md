@@ -37,7 +37,7 @@ See [hardware.md](hardware.md)
 
 Create a Home Assistant Dashboard you want to display. I recommend using the [kiosk-mode](https://github.com/maykar/kiosk-mode), [card-mod](https://github.com/thomasloven/lovelace-card-mod) and [layout-card](https://github.com/thomasloven/lovelace-layout-card) plugins to customize and tune the dashboard for your display.
 
-Setup [sibbl](https://github.com/sibbl/)'s [hass-lovelace-kindle-screensaver](https://github.com/sibbl/hass-lovelace-kindle-screensaver) program to regularly screenshot the desired dashboards for the HomePlate.
+Setup [sibbl](https://github.com/sibbl/)'s [hass-lovelace-kindle-screensaver](https://github.com/sibbl/hass-lovelace-kindle-screensaver) or [my fork hass-screenshot](https://github.com/lanrat/hass-screenshot) to regularly screenshot the desired dashboards for the HomePlate.
 
 ### More information in [hass.md](hass.md) and [dashboard.md](dashboard.md)
 
@@ -73,6 +73,18 @@ pio run --target clean
 ```
 
 ### Debugging
+
+#### Touchpad Sensitivity
+
+On some devices, the touchpads can be overly sensitive. This can cause lots of phantom touch events preventing the Homeplate from going into sleep and using up a lot of power.
+
+Sometimes running `pio run --target=clean` can resolve this before you build & flash the firmware.
+
+The touchpad sensitivity is set in hardware by resistors, but the touch sensors are calibrated on bootup when the Device first gets power. I have found that USB power can mess with this calibration. If you are using battery power, restarting the Homeplate (by using the power switch on the side of the PCB) without USB power attached is enough to fix the sensitivity.
+
+Alternatively, the touchpads can be completely disabled by setting `#define TOUCHPAD_ENABLE false` in `config.h`.
+
+#### Waveform
 
 If you get the following error while booting your inkplate, run the [Inkplate_Wavefrom_EEPROM_Programming](https://github.com/e-radionicacom/Inkplate-Arduino-library/tree/master/examples/Inkplate10/Others/Inkplate_Wavefrom_EEPROM_Programming) example to update your Inkplate's waveform.
 

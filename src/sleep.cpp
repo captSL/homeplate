@@ -6,6 +6,12 @@
 
 static unsigned long sleepTime;
 uint32_t sleepDuration = TIME_TO_SLEEP_SEC;
+uint32_t sleepRefresh = 0;
+
+void setSleepRefresh(uint32_t sec)
+{
+    sleepRefresh = sec;
+}
 
 void setSleepDuration(uint32_t sec)
 {
@@ -15,6 +21,12 @@ void setSleepDuration(uint32_t sec)
 void gotoSleepNow()
 {
     Serial.println("[SLEEP] prepping for sleep");
+    if (sleepRefresh > 0)
+    {
+        Serial.printf("[SLEEP] overriding sleep %d with %d\n", sleepDuration, sleepRefresh);
+        sleepDuration = sleepRefresh;
+        sleepRefresh = 0;
+    }
 
     i2cStart();
     // disconnect WiFi as it's no longer needed
@@ -23,11 +35,14 @@ void gotoSleepNow()
 
     // set MCP interrupts
     if (TOUCHPAD_ENABLE)
-        display.setIntOutputInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 1, false, false, HIGH);
+        display.setIntOutput(1, false, false, HIGH, IO_INT_ADDR);
     i2cEnd();
 
     // Go to sleep for TIME_TO_SLEEP seconds
-    esp_sleep_enable_timer_wakeup(sleepDuration * uS_TO_S_FACTOR);
+    if (esp_sleep_enable_timer_wakeup(sleepDuration * uS_TO_S_FACTOR) != ESP_OK) {
+        Serial.printf("[SLEEP] ERROR esp_sleep_enable_timer_wakeup(%u) invalid value", sleepDuration * uS_TO_S_FACTOR);
+    }
+
     // enable wake from MCP port expander
     if (TOUCHPAD_ENABLE)
         esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);

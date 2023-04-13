@@ -4,7 +4,7 @@
 #define WIFI_TASK_PRIORITY 2
 
 // static addresses
-IPAddress ip, gateway, subnet;
+IPAddress ip, gateway, subnet, dns;
 bool wifiFailed = false;
 
 xTaskHandle wifiTaskHandle;
@@ -56,7 +56,7 @@ void keepWiFiAlive(void *parameter)
         Serial.println("[WIFI] Connecting...");
         WiFi.mode(WIFI_STA);
 #ifdef STATIC_IP
-        WiFi.config(ip, gateway, subnet);
+        WiFi.config(ip, gateway, subnet, dns);
 #endif
         WiFi.setHostname(HOSTNAME); // only works with DHCP....
         WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -70,7 +70,7 @@ void keepWiFiAlive(void *parameter)
             vTaskDelay(100 / portTICK_PERIOD_MS);
         }
 
-        // When we couldn't make a WiFi connection (or the timeout expired)
+        // check for WiFi connection failed (or the timeout expired)
         // sleep for a while and then retry.
         if (WiFi.status() != WL_CONNECTED)
         {
@@ -98,9 +98,9 @@ void wifiConnectTask()
     WiFi.disconnect(true);
 
 #ifdef STATIC_IP
-    if (!ip.fromString(STATIC_IP) || !gateway.fromString(STATIC_GATEWAY) || !subnet.fromString(STATIC_SUBNET))
+    if (!ip.fromString(STATIC_IP) || !gateway.fromString(STATIC_GATEWAY) || !subnet.fromString(STATIC_SUBNET) || !dns.fromString(STATIC_DNS))
     {
-        Serial.printf("[WIFI] Failed to parse static IP information %s/%s %s\n", STATIC_IP, STATIC_SUBNET, STATIC_GATEWAY);
+        Serial.printf("[WIFI] Failed to parse static IP information %s/%s %s %s\n", STATIC_IP, STATIC_SUBNET, STATIC_GATEWAY, STATIC_DNS);
         return;
     }
 #endif
