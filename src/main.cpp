@@ -1,5 +1,5 @@
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE10
+#ifndef ARDUINO_INKPLATE6
 #error "Wrong board selection for this example, please select Inkplate 10 in the boards menu."
 #endif
 
@@ -22,7 +22,6 @@ void setup()
     ++bootCount;
     // reset GPIOs used for wake interrupt
     rtc_gpio_deinit(GPIO_NUM_34);
-    rtc_gpio_deinit(WAKE_BUTTON);
 
     // start inkplate display mutexes
     mutexI2C = xSemaphoreCreateMutex();
@@ -54,7 +53,6 @@ void setup()
     display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, PAD1, RISING);
     display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, PAD2, RISING);
     display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, PAD3, RISING);
-    pinMode(WAKE_BUTTON, INPUT_PULLUP);
 
     // setup display
     if (sleepBoot)
@@ -94,8 +92,8 @@ void setup()
     Serial.println("[SETUP] starting button task");
     startMonitoringButtonsTask();
 
-    Serial.println("[SETUP] starting time task");
-    setupTimeAndSyncTask();
+    // Serial.println("[SETUP] starting time task");
+    // setupTimeAndSyncTask();
 
     Serial.println("[SETUP] starting WiFi task");
     wifiConnectTask();

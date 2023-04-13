@@ -67,12 +67,6 @@ void checkButtons(void *params)
                 startActivity(Info);
                 button = true;
             }
-            else if (!digitalRead(WAKE_BUTTON))
-            {
-                Serial.printf("[INPUT] wake button\n");
-                startActivity(HomeAssistant);
-                button = true;
-            }
         }
 
         if (button)

@@ -31,8 +31,6 @@ extern uint bootCount, activityCount;
 
 #define max(x, y) (((x) >= (y)) ? (x) : (y))
 
-#define WAKE_BUTTON GPIO_NUM_36
-
 #define VERSION __DATE__ ", " __TIME__
 
 #define BATTERY_VOLTAGE_HIGH 4.7
@@ -160,7 +158,7 @@ void delaySleep(uint seconds);
 #define DEBUG_PRINT false
 
 // MQTT
-#define MQTT_TIMEOUT_MS 20000      // 20 second MQTT connection timeout
+#define MQTT_TIMEOUT_MS 30000      // 30 second MQTT connection timeout
 #define MQTT_RECOVER_TIME_MS 30000 // Wait 30 seconds after a failed connection attempt
 #define MQTT_RESEND_CONFIG_EVERY 10
 #define MQTT_RETAIN_SENSOR_VALUE true

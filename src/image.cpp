@@ -8,7 +8,7 @@ void displayStats()
     display.setFont(&Roboto_12);
     display.setTextSize(1);
     // display status message
-    display.setCursor(1155, 820);
+    display.setCursor(755, 595);
 
     // text to print over box
     display.printf("[%s]", timeString());
@@ -223,7 +223,7 @@ void splashScreen()
     // Roboto_128, size: 1, center (285, 461)
     int16_t x = 285;
     int16_t y = 461;
-    bool dynamicPlacement = false;
+    bool dynamicPlacement = true;
     if (dynamicPlacement)
     {
         //get text size for box
